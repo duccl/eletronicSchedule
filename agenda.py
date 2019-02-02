@@ -1,3 +1,7 @@
+'''
+@author: duccl
+'''
+
 import tkinter as tk
 import numpy as np
 import time
@@ -27,19 +31,22 @@ class Main:
     def __init__(self, master):
         self.master = master
         self.frame = tk.Frame(self.master)
-        self.button1 = tk.Button(self.frame, text = 'Cadastrar Consulta', width = 25, command = self.cad)
-        self.button2 = tk.Button(self.frame, text = 'Remover', width = 25, command = self.remove)
-        self.button3 = tk.Button(self.frame, text = 'Pesquisar', width = 25, command = self.find)
-        self.button6 = tk.Button(self.frame, text = 'Listar', width = 25, command = self.show)        
-        self.button5 = tk.Button(self.frame, text = 'Salvar', width = 25, command = self.save)
-        self.button4 = tk.Button(self.frame, text = 'Sair', width = 25, command = self.dest)
-        self.button1.pack()
-        self.button2.pack()
-        self.button3.pack()
-        self.button6.pack()
-        self.button5.pack()
-        self.button4.pack()
+        
+        self.cadastrar = tk.Button(self.frame, text = 'Cadastrar Consulta', width = 25, command = self.cad)
+        self.remover = tk.Button(self.frame, text = 'Remover', width = 25, command = self.remove)
+        self.pesquisar = tk.Button(self.frame, text = 'Pesquisar', width = 25, command = self.find)
+        self.listar = tk.Button(self.frame, text = 'Listar', width = 25, command = self.show)        
+        self.salvar = tk.Button(self.frame, text = 'Salvar', width = 25, command = self.save)
+        self.sair = tk.Button(self.frame, text = 'Sair', width = 25, command = self.dest)
+        
+        self.cadastrar.pack()
+        self.remover.pack()
+        self.pesquisar.pack()
+        self.listar.pack()
+        self.salvar.pack()
+        self.sair.pack()
         self.frame.pack()
+        
     def cad(self):
         self.newWindow = tk.Toplevel(self.master)
         self.app = Cadastra(self.newWindow)
@@ -56,7 +63,7 @@ class Main:
         self.novaJ = tk.Toplevel(self.master)
         try:
             np.save('bancoDeDados.npy',dicMain)
-            out = tk.Label(self.novaJ,text = 'Agenda Salvada!')
+            out = tk.Label(self.novaJ,text = 'Agenda Salva')
         except:
             out = tk.Label(self.novaJ,text = 'ERROR')
         out.pack()
@@ -103,8 +110,8 @@ class Cadastra:
         self.getTelefone = tk.Entry(self.master)
         gTelefone = tk.Label(self.master,text = 'Telefone: ')
 
-        self.getEsp = tk.Entry(self.master)
-        gEsp = tk.Label(self.master,text = 'Especialista: ')
+        self.getEspecialista = tk.Entry(self.master)
+        gEspecialista = tk.Label(self.master,text = 'Especialista: ')
 
 
         self.getNome.place(x = 100,y = 10,width = 135)
@@ -137,8 +144,8 @@ class Cadastra:
         self.getTelefone.place(x = 100,y = 410,width = 135)
         gTelefone.place(x = 3,y=410)
 
-        self.getEsp.place(x = 100,y = 440,width = 135)
-        gEsp.place(x = 3,y=440)
+        self.getEspecialista.place(x = 100,y = 440,width = 135)
+        gEspecialista.place(x = 3,y=440)
         
         self.getAll = tk.Button(self.frame,text = 'Cadastrar',command = self.getCadastro)
 
@@ -150,16 +157,16 @@ class Cadastra:
         self.master.destroy()
     def getCadastro(self):
         nome = str(self.getNome.get())
-        diaC = str(self.getConsulta.get())
-        end = str(self.getEnd.get())
+        diaConsulta = str(self.getConsulta.get())
+        endereco = str(self.getEnd.get())
         idade = str(self.getIdade.get())
-        nas = str(self.getNasc.get())
+        nascimento = str(self.getNasc.get())
         hora = str(self.getHora.get())
-        sex = str(self.getSexo.get())
-        tel = str(self.getTelefone.get())
+        sexo = str(self.getSexo.get())
+        telefone = str(self.getTelefone.get())
         rg = str(self.getRg.get())
         cpf = str(self.getCpf.get())
-        esp = str(self.getEsp.get())
+        especialista = str(self.getEspecialista.get())
         self.getNome.delete(0,tk.END)
         self.getConsulta.delete(0,tk.END)
         self.getEnd.delete(0,tk.END)
@@ -176,11 +183,11 @@ class Cadastra:
         lis = [dic]
         novaJ = tk.Toplevel(self.master)
         out = tk.Label(novaJ,text = 'Paciente Cadastrado!')
-        if diaC in dicMain:
-            dicMain[diaC].append(dic)
+        if diaConsulta in dicMain:
+            dicMain[diaConsulta].append(dic)
             out.pack()
         else:
-            d = {diaC:lis}
+            d = {diaConsulta:lis}
             dicMain.update(d)
             out.pack()
 
@@ -219,16 +226,13 @@ class Remove:
         self.getN.delete(0,tk.END)
         for key in dicMain:
             for lista in dicMain[key]:
-                cont = 0
-                for item in lista:
-                    if item == user:
-                        apagado = True
-                        try:
-                            dicMain[key].pop(cont)
-                            t1 = tk.Label(top,text = 'Usuário removido')
-                        except:
-                            t1 = tk.Label(top.master,text = 'ERROR')
-                    cont= cont+1
+                if(user in lista):
+                    apagado = True
+                    try:
+                        dicMain[key].pop(dicMain[key].index(lista))
+                        t1 = tk.Label(top,text = 'Usuário removido')
+                    except:
+                        t1 = tk.Label(top,text = 'ERROR')
         if not apagado:
             t1 = tk.Label(top,text = 'Usuário não foi encontrado')
         t1.pack(fill='both',expand = 'yes')
