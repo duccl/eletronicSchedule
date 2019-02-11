@@ -177,8 +177,8 @@ class Cadastra:
         self.getTelefone.delete(0,tk.END)
         self.getRg.delete(0,tk.END)
         self.getCpf.delete(0,tk.END)
-        self.getEsp.delete(0,tk.END)
-        car = [idade,nas,sex,end,hora,tel,rg,cpf,esp]
+        self.getEspecialista.delete(0,tk.END)
+        car = [idade,nascimento,sexo,endereco,hora,telefone,rg,cpf,especialista]
         dic = {nome:car}
         lis = [dic]
         novaJ = tk.Toplevel(self.master)
